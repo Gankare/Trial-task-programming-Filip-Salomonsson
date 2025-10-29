@@ -12,9 +12,8 @@ public class IsoPlayerController : MonoBehaviour
     public float moveSpeed = 5f;
 
     [Header("Attack Settings")]
-    [Range(-45f, 45f)] public float attackDirectionOffset = 0f;
     public float attackRange = 1.2f;
-    [Range(5f, 180f)] public float attackAngle = 30f; 
+    [Range(5f, 180f)] public float attackAngle = 180f; 
     public float attackCooldown = 0.6f;
     public int attackDamage = 25;
     public LayerMask enemyLayer;
@@ -32,6 +31,8 @@ public class IsoPlayerController : MonoBehaviour
 
     void Awake()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         rb = GetComponent<Rigidbody2D>();
         controls = new PlayerControls();
         anim = GetComponent<PlayerAnimationController>();
@@ -71,13 +72,7 @@ public class IsoPlayerController : MonoBehaviour
         if (attackDir == Vector2.zero) attackDir = Vector2.up;
 
         Vector2 isoAttackDir = (attackDir.x * isoRight + attackDir.y * isoUp).normalized;
-
-        float radians = attackDirectionOffset * Mathf.Deg2Rad;
-        isoAttackDir = new Vector2(
-            isoAttackDir.x * Mathf.Cos(radians) - isoAttackDir.y * Mathf.Sin(radians),
-            isoAttackDir.x * Mathf.Sin(radians) + isoAttackDir.y * Mathf.Cos(radians)
-        );
-
+        
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, attackRange, enemyLayer);
         foreach (var enemy in hitEnemies)
         {
@@ -90,6 +85,7 @@ public class IsoPlayerController : MonoBehaviour
             }
         }
     }
+
 
     void FixedUpdate()
     {
@@ -117,6 +113,7 @@ public class IsoPlayerController : MonoBehaviour
 
         Vector2 dir = anim.GetLastMoveDir();
         if (dir == Vector2.zero) dir = Vector2.up;
+
         Vector2 isoDir = (dir.x * isoRight + dir.y * isoUp).normalized;
 
         float halfAngle = attackAngle / 2f * Mathf.Deg2Rad;
@@ -131,6 +128,7 @@ public class IsoPlayerController : MonoBehaviour
         );
 
         Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(transform.position, (Vector2)transform.position + isoDir * attackRange);
         Gizmos.DrawLine(transform.position, (Vector2)transform.position + left * attackRange);
         Gizmos.DrawLine(transform.position, (Vector2)transform.position + right * attackRange);
     }
