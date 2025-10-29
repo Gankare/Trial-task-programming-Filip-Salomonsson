@@ -30,4 +30,16 @@ public class PlayerAnimationController : MonoBehaviour
             animator.SetFloat("LastMoveX", lastMoveDir.x);
             animator.SetFloat("LastMoveY", lastMoveDir.y);
     }
+    public void TriggerAttack()
+    {
+        animator.SetTrigger("Attack");
+    }
+    public void TriggerTakeDamage()
+    {
+        animator.SetTrigger("TakeDamage");
+    }
+    public void TriggerDeath()
+    {
+        animator.SetTrigger("Dead");
+    }
 }

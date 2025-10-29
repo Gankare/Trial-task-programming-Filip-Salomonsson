@@ -10,5 +10,5 @@ AssetOrigin:
   productId: 254596
   packageName: Isometric PixelArt - Skeleton Common Soldier
   packageVersion: 1.0
-  assetPath: Assets/PixelArtStudio/SkeletonsPack/CommonSoldier/Prefabs/CommonSoldier.prefab
+  assetPath: Assets/Prefabs/CommonSoldier.prefab
   uploadId: 583562

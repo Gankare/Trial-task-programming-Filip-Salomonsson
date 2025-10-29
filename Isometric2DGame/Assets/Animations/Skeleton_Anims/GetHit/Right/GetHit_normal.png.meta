@@ -150,5 +150,5 @@ AssetOrigin:
   productId: 254596
   packageName: Isometric PixelArt - Skeleton Common Soldier
   packageVersion: 1.0
-  assetPath: Assets/PixelArtStudio/SkeletonsPack/CommonSoldier/Textures/GetHit/Right/GetHit_normal.png
+  assetPath: Assets/Animations/Skeleton_Anims/GetHit/Right/GetHit_normal.png
   uploadId: 583562
