@@ -5,22 +5,26 @@ public class EnemyController : MonoBehaviour
     [Header("Script Info")]
     [TextArea]
     [Tooltip("This is just an informational note.")]
-    public string info = "This script requires an Rigidbody2D component on the same GameObject.";
+    public string info = "This script requires Rigidbody2D,EnemyAnimationController and HealthSystem components on the same GameObject.";
 
     [Header("Movement Settings")]
     public float moveSpeed = 2f;
     public float chaseSpeed = 3.5f;
     public float detectionRange = 6f;
     public float attackRange = 1.2f;
+    public float attackCooldown = 1f;
+    public int attackDamage = 15;
     public float idleWaitTime = 2f;
     public float patrolRadius = 4f;
 
+    private HealthSystem health;
     private Rigidbody2D rb;
     private EnemyAnimationController anim;
     private Transform player;
     private Vector2 spawnPosition;
     private Vector2 targetPoint;
     private float idleTimer;
+    private float nextAttackTime;
     private State currentState;
 
     private readonly Vector2 isoRight = new(1f, -0.5f);
@@ -30,6 +34,7 @@ public class EnemyController : MonoBehaviour
 
     void Awake()
     {
+        health = GetComponent<HealthSystem>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<EnemyAnimationController>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -40,6 +45,13 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        if (health == null) health = GetComponent<HealthSystem>();
+        if (health != null && health.IsDead)
+        {
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
+
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
         switch (currentState)
@@ -87,31 +99,36 @@ public class EnemyController : MonoBehaviour
     void Patrol()
     {
         MoveTowards(targetPoint, moveSpeed);
-
         if (Vector2.Distance(transform.position, targetPoint) < 0.1f)
-        {
             ChangeState(State.Idle);
-        }
     }
 
-    void Chase()
-    {
-        MoveTowards(player.position, chaseSpeed);
-    }
+    void Chase() => MoveTowards(player.position, chaseSpeed);
 
     void Attack()
     {
         rb.linearVelocity = Vector2.zero;
+        anim.UpdateAnimation(Vector2.zero);
+
+        if (Time.time < nextAttackTime) return;
+
+        nextAttackTime = Time.time + attackCooldown; 
         anim.TriggerAttack();
+
+        Vector2 toPlayer = (player.position - transform.position).normalized;
+        float distance = Vector2.Distance(transform.position, player.position);
+
+        if (distance <= attackRange + 0.3f)
+        {
+            player.GetComponent<HealthSystem>()?.TakeDamage(attackDamage);
+        }
     }
 
     void MoveTowards(Vector2 target, float speed)
     {
         Vector2 direction = (target - (Vector2)transform.position).normalized;
-
         Vector2 isoDirection = (direction.x * isoRight + direction.y * isoUp);
-        if (isoDirection.sqrMagnitude > 1f)
-            isoDirection.Normalize();
+        if (isoDirection.sqrMagnitude > 1f) isoDirection.Normalize();
 
         rb.MovePosition(rb.position + isoDirection * speed * Time.deltaTime);
         anim.UpdateAnimation(direction);
@@ -123,8 +140,6 @@ public class EnemyController : MonoBehaviour
         targetPoint = spawnPosition + randomOffset;
     }
 
-    void ChangeState(State newState)
-    {
-        currentState = newState;
-    }
+    void ChangeState(State newState) => currentState = newState;
 }
+

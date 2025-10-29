@@ -24,20 +24,26 @@ public class PlayerAnimationController : MonoBehaviour
         animator.SetFloat("Speed", speed);
 
         if (speed > 0.01f)
-        {
             lastMoveDir = moveInput.normalized;
-        }
-            animator.SetFloat("LastMoveX", lastMoveDir.x);
-            animator.SetFloat("LastMoveY", lastMoveDir.y);
+
+         animator.SetFloat("LastMoveX", lastMoveDir.x);
+         animator.SetFloat("LastMoveY", lastMoveDir.y);
     }
+    public Vector2 GetLastMoveDir()
+    {
+        return lastMoveDir;
+    }
+
     public void TriggerAttack()
     {
         animator.SetTrigger("Attack");
     }
+
     public void TriggerTakeDamage()
     {
         animator.SetTrigger("TakeDamage");
     }
+
     public void TriggerDeath()
     {
         animator.SetTrigger("Dead");

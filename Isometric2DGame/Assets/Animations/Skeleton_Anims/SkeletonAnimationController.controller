@@ -662,14 +662,14 @@ AnimatorStateMachine:
     m_State: {fileID: -1207406374494308118}
     m_Position: {x: 250, y: 50, z: 0}
   - serializedVersion: 1
-    m_State: {fileID: 6396173868573459592}
-    m_Position: {x: 30, y: 20, z: 0}
-  - serializedVersion: 1
     m_State: {fileID: 7941600472784302742}
     m_Position: {x: 490, y: -30, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5777199242655164655}
     m_Position: {x: 490, y: 230, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 6337222237377794614}
+    m_Position: {x: 30, y: 20, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -966,7 +966,7 @@ BlendTree:
   m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
   m_BlendType: 2
---- !u!1102 &6396173868573459592
+--- !u!1102 &6337222237377794614
 AnimatorState:
   serializedVersion: 6
   m_ObjectHideFlags: 1

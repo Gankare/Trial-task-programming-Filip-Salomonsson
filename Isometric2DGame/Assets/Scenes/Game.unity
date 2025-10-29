@@ -286,13 +286,13 @@ Camera:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 0.33333334
-    height: 0.44444445
+    width: 1
+    height: 1
   near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 4.21875
+  orthographic size: 1.40625
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -726,7 +726,9 @@ MonoBehaviour:
   moveSpeed: 2
   chaseSpeed: 3.5
   detectionRange: 6
-  attackRange: 0.5
+  attackRange: 0.4
+  attackCooldown: 1.2
+  attackDamage: 15
   idleWaitTime: 2
   patrolRadius: 4
 --- !u!114 &779437478
@@ -925,6 +927,7 @@ GameObject:
   - component: {fileID: 1421299350}
   - component: {fileID: 1421299351}
   - component: {fileID: 1421299352}
+  - component: {fileID: 1421299353}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1015,7 +1018,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   info: This script requires an Rigidbody2D component on the same GameObject.
-  moveSpeed: 2
+  moveSpeed: 1
+  attackDirectionOffset: 0
+  attackRange: 0.5
+  attackAngle: 145
+  attackCooldown: 0.6
+  attackDamage: 25
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!50 &1421299349
 Rigidbody2D:
   serializedVersion: 5
@@ -1115,6 +1126,21 @@ CapsuleCollider2D:
   m_Offset: {x: 0.02, y: -0.06}
   m_Size: {x: 0.25, y: 0.5}
   m_Direction: 0
+--- !u!114 &1421299353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421299344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3229dc90a1ff7964b8052cb872537210, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  isPlayer: 1
+  fadeEffectOnDeath: {fileID: 0}
 --- !u!114 &1429717162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1404,7 +1430,7 @@ GameObject:
   - component: {fileID: 779437476}
   - component: {fileID: 779437475}
   - component: {fileID: 8828367907163699606}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CommonSoldier
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1433,28 +1459,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!195 &8828367907163699606
-NavMeshAgent:
+--- !u!114 &8828367907163699606
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8385226143459141739}
   m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.1
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 0.41
-  m_BaseOffset: 0.07
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3229dc90a1ff7964b8052cb872537210, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  isPlayer: 0
+  fadeEffectOnDeath: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
