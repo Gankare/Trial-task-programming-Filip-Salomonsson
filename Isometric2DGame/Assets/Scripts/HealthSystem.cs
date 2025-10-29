@@ -9,6 +9,8 @@ public class HealthSystem : MonoBehaviour
     [Tooltip("This is just an informational note.")]
     public string info = "This script works for both player and enemy, depending on what controller script is attatched. Update isPlayer acordingly (:";
 
+    public HealthBarUI playerHealthBar;
+
     public int maxHealth = 100;
     public bool isPlayer;
     public GameObject fadeEffectOnDeath;
@@ -26,12 +28,21 @@ public class HealthSystem : MonoBehaviour
         sr = GetComponentInChildren<SpriteRenderer>();
         playerAnim = GetComponent<PlayerAnimationController>();
         enemyAnim = GetComponent<EnemyAnimationController>();
+
+        if (isPlayer && playerHealthBar != null)
+        {
+            playerHealthBar.SetHealth(1f);
+        }
     }
 
     public void TakeDamage(int damage)
     {
         if (isDead) return;
+
         currentHealth -= damage;
+        if (playerHealthBar != null && isPlayer)
+            playerHealthBar.SetHealth((float)currentHealth / maxHealth);
+
         StartCoroutine(FlashRed());
 
         if (playerAnim) playerAnim.TriggerTakeDamage();
@@ -47,10 +58,9 @@ public class HealthSystem : MonoBehaviour
     {
         if (sr != null)
         {
-            Color original = sr.color;
             sr.color = Color.red;
             yield return new WaitForSeconds(0.5f);
-            sr.color = original;
+            sr.color = new Color(1f, 1f, 1f, 1f);
         }
     }
 
