@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 5197527800570630511}
   - component: {fileID: 7307019251390764145}
   - component: {fileID: 4686460958544410764}
+  - component: {fileID: -7700245488614479429}
   m_Layer: 0
   m_Name: pine-none03_0
-  m_TagString: Untagged
+  m_TagString: SpawnedObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -124,3 +125,23 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0.18, y: -0.33}
   m_Radius: 0.1
+--- !u!114 &-7700245488614479429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4625838537126860059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_OverrideArea: 1
+  m_Area: 1
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
