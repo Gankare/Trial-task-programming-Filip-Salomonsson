@@ -1,184 +1,190 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
     [Header("Script Info")]
     [TextArea]
     [Tooltip("This is just an informational note.")]
-    public string info = "This script requires Rigidbody2D, EnemyAnimationController, and HealthSystem components on the same GameObject.";
+    public string info = "This script requires Rigidbody2D, EnemyAnimationController, HealthSystem and NavMeshAgent components on the same GameObject.";
 
-    [Header("Movement Settings")]
-    public float moveSpeed = 2f;
-    public float chaseSpeed = 3.5f;
+    [Header("AI Settings")]
     public float attackRange = 1.2f;
     public float attackCooldown = 1f;
     public int attackDamage = 5;
-
-    [Header("Patrol Settings")]
     public float idleWaitTime = 2f;
     public float patrolRadius = 4f;
-
-    [Header("Detection Settings")]
     public float detectionRange = 6f;
-    public bool useTriggerDetection = true;
 
-    private HealthSystem health;
-    private Rigidbody2D rb;
-    private EnemyAnimationController anim;
+    private NavMeshAgent agent;
     private Transform player;
+    private EnemyAnimationController anim;
+    private HealthSystem health;
     private Vector2 spawnPosition;
-    private Vector2 targetPoint;
+    private Vector2 patrolTarget;
     private float idleTimer;
     private float nextAttackTime;
     private bool playerInRange;
-    private State currentState;
+    private State state;
 
-    private readonly Vector2 isoRight = new(1f, -0.5f);
-    private readonly Vector2 isoUp = new(1f, 0.5f);
+    private float stuckTimer = 0f;
+    private Vector3 lastPosition;
+    public float stuckThreshold = 0.05f;  
+    public float stuckTimeLimit = 2f;     
 
     private enum State { Idle, Patrol, Chase, Attack }
 
     void Awake()
     {
+        agent = GetComponent<NavMeshAgent>();
         health = GetComponent<HealthSystem>();
-        rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<EnemyAnimationController>();
-
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
-        if (player == null)
-            Debug.LogWarning("No Player found");
+
+        agent.updateRotation = false;
+        agent.updateUpAxis = false;
 
         spawnPosition = transform.position;
-        PickNewPatrolPoint();
-        currentState = State.Idle;
+        PickPatrolPoint();
+        state = State.Idle;
 
-        CircleCollider2D col = GetComponent<CircleCollider2D>();
-        if (useTriggerDetection && col == null)
-        {
-            col = gameObject.AddComponent<CircleCollider2D>();
-            col.isTrigger = true;
-            col.radius = detectionRange;
-        }
+        lastPosition = transform.position;
     }
 
     void Update()
     {
-        if (health == null || rb == null) return;
-        if (health.IsDead)
+        if (health == null || health.IsDead)
         {
-            rb.linearVelocity = Vector2.zero;
+            agent.ResetPath();
             return;
         }
 
-        float distanceToPlayer = player != null
-            ? Vector2.Distance(transform.position, player.position)
-            : Mathf.Infinity;
+        float distanceToPlayer = player ? Vector2.Distance(transform.position, player.position) : Mathf.Infinity;
 
-        bool detected = useTriggerDetection ? playerInRange : distanceToPlayer < detectionRange;
-
-        switch (currentState)
+        switch (state)
         {
             case State.Idle:
                 Idle();
-                if (detected) ChangeState(State.Chase);
+                if (playerInRange) ChangeState(State.Chase);
                 break;
 
             case State.Patrol:
                 Patrol();
-                if (detected) ChangeState(State.Chase);
+                if (playerInRange) ChangeState(State.Chase);
                 break;
 
             case State.Chase:
                 Chase();
-                if (distanceToPlayer <= attackRange)
-                    ChangeState(State.Attack);
-                else if (!detected)
+                if (!playerInRange)
                     ChangeState(State.Patrol);
+                else if (distanceToPlayer < attackRange)
+                    ChangeState(State.Attack);
                 break;
 
             case State.Attack:
                 Attack();
-                if (distanceToPlayer > attackRange + 0.5f)
+                if (!playerInRange || distanceToPlayer > attackRange + 0.5f)
                     ChangeState(State.Chase);
                 break;
         }
+
+        anim.UpdateAnimation(agent.velocity.normalized);
     }
+
     void Idle()
     {
-        anim.UpdateAnimation(Vector2.zero);
+        agent.ResetPath();
         idleTimer += Time.deltaTime;
 
         if (idleTimer >= idleWaitTime)
         {
-            idleTimer = 0;
-            PickNewPatrolPoint();
+            idleTimer = 0f;
+            PickPatrolPoint();
             ChangeState(State.Patrol);
         }
     }
 
     void Patrol()
     {
-        MoveTowards(targetPoint, moveSpeed);
-        if (Vector2.Distance(transform.position, targetPoint) < 0.1f)
+        if (!agent.hasPath)
+            agent.SetDestination(patrolTarget);
+
+        if (Vector3.Distance(transform.position, lastPosition) < stuckThreshold)
+        {
+            stuckTimer += Time.deltaTime;
+            if (stuckTimer >= stuckTimeLimit)
+            {
+                PickPatrolPoint();
+                agent.SetDestination(patrolTarget);
+                stuckTimer = 0f;
+            }
+        }
+        else
+        {
+            stuckTimer = 0f;
+        }
+
+        lastPosition = transform.position;
+
+        if (Vector2.Distance(transform.position, patrolTarget) < 0.3f)
             ChangeState(State.Idle);
     }
 
     void Chase()
     {
         if (player == null) return;
-        MoveTowards(player.position, chaseSpeed);
+        agent.SetDestination(player.position);
     }
 
     void Attack()
     {
-        if (player == null) return;
-
-        rb.linearVelocity = Vector2.zero;
-        anim.UpdateAnimation(Vector2.zero);
-
+        agent.ResetPath();
         if (Time.time < nextAttackTime) return;
 
         nextAttackTime = Time.time + attackCooldown;
         anim.TriggerAttack();
 
-        Vector2 toPlayer = (player.position - transform.position).normalized;
-        float distance = Vector2.Distance(transform.position, player.position);
-
-        if (distance <= attackRange + 0.3f)
+        if (player && Vector2.Distance(transform.position, player.position) <= attackRange + 0.3f)
             player.GetComponent<HealthSystem>()?.TakeDamage(attackDamage);
     }
 
-    void MoveTowards(Vector2 target, float speed)
+    void PickPatrolPoint()
     {
-        Vector2 direction = (target - (Vector2)transform.position).normalized;
-        Vector2 isoDirection = (direction.x * isoRight + direction.y * isoUp);
+        for (int i = 0; i < 10; i++)
+        {
+            Vector2 randomOffset = Random.insideUnitCircle * patrolRadius;
+            Vector3 candidate = spawnPosition + randomOffset;
+            if (NavMesh.SamplePosition(candidate, out NavMeshHit hit, patrolRadius, NavMesh.AllAreas))
+            {
+                patrolTarget = hit.position;
+                return;
+            }
+        }
 
-        if (isoDirection.sqrMagnitude > 1f)
-            isoDirection.Normalize();
-
-        rb.MovePosition(rb.position + isoDirection * speed * Time.deltaTime);
-        anim.UpdateAnimation(direction);
+        patrolTarget = spawnPosition;
     }
 
-    void PickNewPatrolPoint()
-    {
-        Vector2 randomOffset = Random.insideUnitCircle * patrolRadius;
-        targetPoint = spawnPosition + randomOffset;
-    }
+    void ChangeState(State newState) => state = newState;
 
-    void ChangeState(State newState)
-    {
-        currentState = newState;
-    }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (useTriggerDetection && other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
             playerInRange = true;
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (useTriggerDetection && other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
             playerInRange = false;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(spawnPosition, patrolRadius);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(patrolTarget, 0.1f);
     }
 }

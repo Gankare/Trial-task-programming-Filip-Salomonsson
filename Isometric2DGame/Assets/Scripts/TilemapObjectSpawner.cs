@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
+using NavMeshPlus.Components; 
 using System.Collections.Generic;
 
 public class TilemapObjectSpawner : MonoBehaviour
@@ -8,15 +9,15 @@ public class TilemapObjectSpawner : MonoBehaviour
     public Tilemap targetTilemap;
     public GameObject[] spawnPrefabs;
     public Transform playerTransform;
+    public NavMeshSurface navSurface;
 
     [Header("Spawn Settings")]
-    [Range(0f, 1f)]
-    public float spawnChance = 0.1f;
+    [Range(0f, 1f)] public float spawnChance = 0.1f;
     public float positionJitter = 0.2f;
     public bool clearOldSpawns = true;
-
-    public Transform objectParent;
     public float minDistanceFromPlayer = 2.5f;
+    public Transform objectParent;
+
     private readonly string spawnedTag = "SpawnedObject";
 
     void Start()
@@ -26,15 +27,8 @@ public class TilemapObjectSpawner : MonoBehaviour
 
     public void SpawnObjects()
     {
-        if (targetTilemap == null)
-        {
+        if (targetTilemap == null || spawnPrefabs == null || spawnPrefabs.Length == 0)
             return;
-        }
-
-        if (spawnPrefabs == null || spawnPrefabs.Length == 0)
-        {
-            return;
-        }
 
         if (clearOldSpawns)
             ClearSpawnedObjects();
@@ -50,11 +44,9 @@ public class TilemapObjectSpawner : MonoBehaviour
         }
 
         int spawnedCount = 0;
-
         foreach (var cellPos in validCells)
         {
             Vector3 worldPos = targetTilemap.CellToWorld(cellPos);
-
             if (Vector3.Distance(worldPos, playerPos) < minDistanceFromPlayer)
                 continue;
 
@@ -68,15 +60,18 @@ public class TilemapObjectSpawner : MonoBehaviour
 
                 GameObject prefab = spawnPrefabs[Random.Range(0, spawnPrefabs.Length)];
                 GameObject instance = Instantiate(prefab, worldPos + offset, Quaternion.identity);
-
                 instance.transform.SetParent(objectParent ? objectParent : transform);
                 instance.tag = spawnedTag;
-
                 spawnedCount++;
             }
         }
 
-        Debug.Log($"Spawned {spawnedCount} objects");
+        Debug.Log($"Spawned {spawnedCount} objects.");
+
+        if (navSurface != null)
+        {
+            navSurface.BuildNavMesh();
+        }
     }
 
     public void ClearSpawnedObjects()

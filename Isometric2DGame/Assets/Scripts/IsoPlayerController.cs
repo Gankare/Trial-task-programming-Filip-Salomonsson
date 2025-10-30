@@ -72,19 +72,31 @@ public class IsoPlayerController : MonoBehaviour
         if (attackDir == Vector2.zero) attackDir = Vector2.up;
 
         Vector2 isoAttackDir = (attackDir.x * isoRight + attackDir.y * isoUp).normalized;
-        
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, attackRange, enemyLayer);
-        foreach (var enemy in hitEnemies)
-        {
-            Vector2 toEnemy = ((Vector2)enemy.transform.position - (Vector2)transform.position).normalized;
-            float angle = Vector2.Angle(isoAttackDir, toEnemy);
 
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, attackRange, enemyLayer);
+
+        foreach (var collider in hitColliders)
+        {
+            if (collider.isTrigger)
+                continue;
+
+            HealthSystem enemyHealth = collider.GetComponent<HealthSystem>();
+            if (enemyHealth == null)
+                continue;
+
+            Vector2 toEnemy = (Vector2)collider.transform.position - (Vector2)transform.position;
+            float distance = toEnemy.magnitude;
+            if (distance > attackRange)
+                continue;
+
+            float angle = Vector2.Angle(isoAttackDir, toEnemy);
             if (angle <= attackAngle / 2f)
             {
-                enemy.GetComponent<HealthSystem>()?.TakeDamage(attackDamage);
+                enemyHealth.TakeDamage(attackDamage);
             }
         }
     }
+
 
 
     void FixedUpdate()

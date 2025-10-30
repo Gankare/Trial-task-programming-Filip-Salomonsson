@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7289095844202480157}
   - component: {fileID: 881638363662551416}
   - component: {fileID: 3609040407201043830}
-  - component: {fileID: 304999071618370669}
+  - component: {fileID: -6961755631006460986}
   m_Layer: 0
   m_Name: pine-none02_0
   m_TagString: SpawnedObject
@@ -125,7 +125,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0.21, y: -0.38}
   m_Radius: 0.1
---- !u!114 &304999071618370669
+--- !u!114 &-6961755631006460986
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -134,14 +134,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8736788554287832513}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SerializedVersion: 0
   m_OverrideArea: 1
   m_Area: 1
-  m_OverrideGenerateLinks: 0
-  m_GenerateLinks: 0
   m_IgnoreFromBuild: 0
-  m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff

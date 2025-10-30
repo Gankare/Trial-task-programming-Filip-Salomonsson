@@ -15,7 +15,7 @@ public class HealthSystem : MonoBehaviour
     public bool isPlayer;
     public GameObject fadeEffectOnDeath;
 
-    private int currentHealth;
+    public int currentHealth;
     private SpriteRenderer sr;
     private PlayerAnimationController playerAnim;
     private EnemyAnimationController enemyAnim;
