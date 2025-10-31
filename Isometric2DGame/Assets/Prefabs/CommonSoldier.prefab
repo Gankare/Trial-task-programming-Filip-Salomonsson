@@ -237,10 +237,10 @@ MonoBehaviour:
   attackCooldown: 1.2
   attackDamage: 5
   idleWaitTime: 2
-  patrolRadius: 4
+  patrolRadius: 3
   detectionRange: 3
   stuckThreshold: 0.05
-  stuckTimeLimit: 2
+  stuckTimeLimit: 10
 --- !u!50 &3641480005309567304
 Rigidbody2D:
   serializedVersion: 5
