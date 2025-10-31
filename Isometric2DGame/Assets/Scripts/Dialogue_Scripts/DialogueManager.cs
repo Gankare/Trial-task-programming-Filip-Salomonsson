@@ -22,6 +22,7 @@ public class DialogueManager : MonoBehaviour
     private bool isTyping = false;
     private bool inDialogue = false;
 
+    public GameObject killCounterUI;
     public GameObject npc;
 
     public static DialogueManager Instance { get; private set; }
@@ -36,6 +37,7 @@ public class DialogueManager : MonoBehaviour
     {
         typer = dialogueText.GetComponent<AutoTypewriterTMP>();
         dialogueUI.SetActive(false);
+        killCounterUI.SetActive(false);
     }
 
     public void StartDialogue(DialogueNode[] dialogueNodes)
@@ -135,6 +137,7 @@ public class DialogueManager : MonoBehaviour
         Cursor.visible = false;
         EnemySpawner.Instance.SpawnObjectsOutsideCamera();
         npc.SetActive(false);
+        killCounterUI.SetActive(true);
     }
 
     public bool IsInDialogue() => inDialogue;

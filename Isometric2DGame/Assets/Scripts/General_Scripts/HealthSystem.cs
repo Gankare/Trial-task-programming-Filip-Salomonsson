@@ -45,10 +45,16 @@ public class HealthSystem : MonoBehaviour
             playerHealthBar.SetHealth((float)currentHealth / maxHealth);
         }
 
-        StartCoroutine(FlashRed());
-
-        if (playerAnim) playerAnim.TriggerTakeDamage();
-        if (enemyAnim) enemyAnim.TriggerTakeDamage();
+        if (playerAnim)
+        {
+            StartCoroutine(FlashRed());
+            playerAnim.TriggerTakeDamage();
+        }
+        if (enemyAnim)
+        {
+            StartCoroutine(EnemyFlashRed());
+            enemyAnim.TriggerTakeDamage();
+        }
 
         if (currentHealth <= 0)
         {
@@ -65,6 +71,16 @@ public class HealthSystem : MonoBehaviour
             sr.color = new Color(1f, 1f, 1f, 1f);
         }
     }
+    IEnumerator EnemyFlashRed()
+    {
+        if (sr != null)
+        {
+            Color originalColor = sr.color;
+            sr.color = Color.red;
+            yield return new WaitForSeconds(0.5f);
+            sr.color = originalColor;
+        }
+    }
 
     void Die()
     {
@@ -77,6 +93,7 @@ public class HealthSystem : MonoBehaviour
         if (enemyAnim)
         {
             AudioManager.Instance.SkeletonDeathAudio();
+            KillCounter.Instance.AddKill();
             enemyAnim.TriggerDeath(); 
         }
 
