@@ -10,6 +10,7 @@ The goal of this project is to show my understanding of gameplay systems, clean 
 Play by starting from Menu scene. Gameplay wise you attack with the mouse click. The attack is in the direction that your player is facing and not where you click. E to interact with Npc. 
 
 Links to the free assets used in the project: 
+
 Music: https://peritune.itch.io/battle-tracks-jrpg-battle-music-collection
 
 Trees: https://opengameart.org/content/free-isometric-plants-pack
