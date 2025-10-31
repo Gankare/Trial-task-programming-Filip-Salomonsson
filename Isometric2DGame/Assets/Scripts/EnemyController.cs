@@ -83,7 +83,7 @@ public class EnemyController : MonoBehaviour
 
             case State.Attack:
                 Attack();
-                if (!playerInRange || distanceToPlayer > attackRange + 0.5f)
+                if (!playerInRange || distanceToPlayer > attackRange)
                     ChangeState(State.Chase);
                 break;
         }
@@ -144,7 +144,7 @@ public class EnemyController : MonoBehaviour
         nextAttackTime = Time.time + attackCooldown;
         anim.TriggerAttack();
 
-        if (player && Vector2.Distance(transform.position, player.position) <= attackRange + 0.3f)
+        if (player && Vector2.Distance(transform.position, player.position) <= attackRange)
             player.GetComponent<HealthSystem>()?.TakeDamage(attackDamage);
     }
 
