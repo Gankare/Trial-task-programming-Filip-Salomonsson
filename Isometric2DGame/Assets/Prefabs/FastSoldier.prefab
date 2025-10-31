@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 4622521156569757761}
   - component: {fileID: 6760173927634531999}
   m_Layer: 6
-  m_Name: CommonSoldier
+  m_Name: FastSoldier
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -175,7 +175,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_Sprite: {fileID: -7008412969330441016, guid: 4a7c0da22d195094c996d9182a363b82, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.5518868, b: 0.5518868, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -249,10 +249,10 @@ MonoBehaviour:
     and NavMeshAgent components on the same GameObject.
   attackRange: 0.5
   attackCooldown: 1.2
-  attackDamage: 5
+  attackDamage: 10
   idleWaitTime: 2
   patrolRadius: 3
-  detectionRange: 3
+  detectionRange: 5
   stuckThreshold: 0.05
   stuckTimeLimit: 10
 --- !u!50 &3641480005309567304
@@ -297,7 +297,7 @@ MonoBehaviour:
   info: 'This script works for both player and enemy, depending on what controller
     script is attatched. Update isPlayer acordingly (:'
   playerHealthBar: {fileID: 0}
-  maxHealth: 50
+  maxHealth: 25
   isPlayer: 0
   fadeEffectOnDeath: {fileID: 0}
   currentHealth: 0
@@ -336,7 +336,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 3
+  m_Radius: 5
 --- !u!58 &8945960689101666445
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -383,7 +383,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.2
-  m_Speed: 0.35
+  m_Speed: 0.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
