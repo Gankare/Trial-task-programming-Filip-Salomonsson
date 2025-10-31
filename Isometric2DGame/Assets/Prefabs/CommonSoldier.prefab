@@ -300,6 +300,7 @@ MonoBehaviour:
   maxHealth: 100
   isPlayer: 0
   fadeEffectOnDeath: {fileID: 0}
+  collider: {fileID: 8945960689101666445}
   currentHealth: 0
 --- !u!58 &8990414470121561166
 CircleCollider2D:

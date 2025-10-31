@@ -31,8 +31,6 @@ public class IsoPlayerController : MonoBehaviour
 
     void Awake()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
         rb = GetComponent<Rigidbody2D>();
         controls = new PlayerControls();
         anim = GetComponent<PlayerAnimationController>();

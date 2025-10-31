@@ -30,7 +30,7 @@ public class EnemyController : MonoBehaviour
     private float stuckTimer = 0f;
     private Vector3 lastPosition;
     public float stuckThreshold = 0.05f;  
-    public float stuckTimeLimit = 2f;     
+    public float stuckTimeLimit = 2f;
 
     private enum State { Idle, Patrol, Chase, Attack }
 

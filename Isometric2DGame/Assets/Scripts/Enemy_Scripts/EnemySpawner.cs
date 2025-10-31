@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
 {
+    public static EnemySpawner Instance { get; private set; }
+
     [Header("References")]
     public Tilemap targetTilemap;
     public GameObject[] spawnPrefabs;
@@ -20,7 +22,16 @@ public class EnemySpawner : MonoBehaviour
     public float minDistanceFromPlayer = 5f;
     public float spawnBufferOutsideView = 2f;
     public bool clearOldSpawns = true;
-    public float navmeshCheckRadius = 1f; 
+    public float navmeshCheckRadius = 1f;
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+    }
 
 
     void Start()
@@ -28,7 +39,7 @@ public class EnemySpawner : MonoBehaviour
         if (mainCamera == null)
             mainCamera = Camera.main;
 
-        SpawnObjectsOutsideCamera();
+        //SpawnObjectsOutsideCamera();
     }
 
     public void SpawnObjectsOutsideCamera()

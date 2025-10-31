@@ -14,7 +14,6 @@ public class HealthSystem : MonoBehaviour
     public int maxHealth = 100;
     public bool isPlayer;
     public GameObject fadeEffectOnDeath;
-
     public int currentHealth;
     private SpriteRenderer sr;
     private PlayerAnimationController playerAnim;
