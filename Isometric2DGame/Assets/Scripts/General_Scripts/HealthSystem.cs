@@ -40,7 +40,10 @@ public class HealthSystem : MonoBehaviour
 
         currentHealth -= damage;
         if (playerHealthBar != null && isPlayer)
+        {
+            AudioManager.Instance.PlayerHurtAudio();
             playerHealthBar.SetHealth((float)currentHealth / maxHealth);
+        }
 
         StartCoroutine(FlashRed());
 
@@ -66,8 +69,16 @@ public class HealthSystem : MonoBehaviour
     void Die()
     {
         isDead = true;
-        if (playerAnim) playerAnim.TriggerDeath();
-        if (enemyAnim) enemyAnim.TriggerDeath();
+        if (playerAnim)
+        {
+            StartCoroutine(DeathSoundAfterDelay());
+            playerAnim.TriggerDeath();
+        }
+        if (enemyAnim)
+        {
+            AudioManager.Instance.SkeletonDeathAudio();
+            enemyAnim.TriggerDeath(); 
+        }
 
         if (isPlayer)
         {
@@ -79,7 +90,11 @@ public class HealthSystem : MonoBehaviour
             Destroy(gameObject, 1.5f); 
         }
     }
-
+    IEnumerator DeathSoundAfterDelay()
+    {
+        yield return new WaitForSeconds(1);
+        AudioManager.Instance.PlayerDyingAudio();
+    }
     IEnumerator ReloadSceneAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);

@@ -65,6 +65,7 @@ public class IsoPlayerController : MonoBehaviour
 
         nextAttackTime = Time.time + attackCooldown;
         anim.TriggerAttack();
+        AudioManager.Instance.SwordSwingAudio();
 
         Vector2 attackDir = anim.GetLastMoveDir();
         if (attackDir == Vector2.zero) attackDir = Vector2.up;
