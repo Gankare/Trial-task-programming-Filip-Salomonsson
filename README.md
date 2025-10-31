@@ -11,11 +11,18 @@ Play by starting from Menu scene. Gameplay wise you attack with the mouse click.
 
 Links to the free assets used in the project: 
 Music: https://peritune.itch.io/battle-tracks-jrpg-battle-music-collection
+
 Trees: https://opengameart.org/content/free-isometric-plants-pack
+
 Enemy: https://assetstore.unity.com/packages/2d/characters/2d-skeleton-isometric-pixelart-character-254596
+
 HP-bar: https://toffeecraft.itch.io/dragon-hp-bar-free
+
 Font: https://ggbot.itch.io/3d-isometric-font
+
 Tiles: https://iocainesmoothie.itch.io/free-iso-tiles-grassstonesand
+
 Player: https://smallscaleint.itch.io/hd-8-directional-top-down-character-pack-1
+
 Navmeshplus: https://github.com/h8man/NavMeshPlus
 
